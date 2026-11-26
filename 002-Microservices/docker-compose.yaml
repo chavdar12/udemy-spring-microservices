@@ -1,0 +1,42 @@
+# docker compose up --build   then try http://localhost:8765/convert/from/USD/to/EUR/quantity/10
+x-service: &service
+  build: &build
+    context: .
+  restart: unless-stopped
+  environment:
+    EUREKA_URL: http://naming-server:8761/eureka
+  depends_on: [naming-server]
+
+services:
+  naming-server:
+    build: { context: ., args: { SERVICE: naming-server } }
+    ports: ["8761:8761"]
+
+  config-server:
+    build: { context: ., args: { SERVICE: config-server } }
+    environment:
+      CONFIG_REPO: file:/config-repo
+    volumes: ["./config-repo:/config-repo:ro"]
+    ports: ["8888:8888"]
+
+  limits-service:
+    build: { context: ., args: { SERVICE: limits-service } }
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+    depends_on: [config-server]
+    ports: ["8080:8080"]
+
+  currency-exchange:
+    <<: *service
+    build: { <<: *build, args: { SERVICE: currency-exchange-service } }
+    ports: ["8000:8000"]
+
+  currency-conversion:
+    <<: *service
+    build: { <<: *build, args: { SERVICE: currency-conversion-service } }
+    ports: ["8100:8100"]
+
+  api-gateway:
+    <<: *service
+    build: { <<: *build, args: { SERVICE: api-gateway } }
+    ports: ["8765:8765"]

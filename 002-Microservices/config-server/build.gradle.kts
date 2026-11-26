@@ -1,0 +1,8 @@
+plugins {
+    java
+    id("org.springframework.boot")
+}
+
+dependencies {
+    implementation("org.springframework.cloud:spring-cloud-config-server")
+}

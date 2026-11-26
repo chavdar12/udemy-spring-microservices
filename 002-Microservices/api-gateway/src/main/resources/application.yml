@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: api-gateway
+server:
+  port: 8765
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+# lb:// asks Eureka for an instance; tests point these at a stub
+gateway:
+  exchange-uri: lb://currency-exchange
+  conversion-uri: lb://currency-conversion

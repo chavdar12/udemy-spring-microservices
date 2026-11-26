@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: limits-service
+  profiles:
+    active: ${PROFILE:default}
+  config:
+    # starts without the config server and falls back to the values below
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}
+server:
+  port: 8080
+limits-service:
+  minimum: 1
+  maximum: 1000

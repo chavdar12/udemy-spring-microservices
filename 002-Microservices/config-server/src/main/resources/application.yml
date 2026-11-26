@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    # serve plain files from a folder instead of a git repository
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: ${CONFIG_REPO:file:../config-repo}
+server:
+  port: 8888
